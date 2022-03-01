@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 #
-# packet.py -- Wadih Khairallah <woody@smallroom.com>
+# packet.py -- <woody@smallroom.com>
+# packet.py -i <interface> -c <packet_count> -h <neo4j_host> -p <neo4j_password>
 
 from struct import *
 import sys
@@ -9,34 +10,43 @@ import socket
 import pyshark
 from graph import Graph
 
-# Prepare login items for neo4j
-scheme = "neo4j"  # Connecting to Aura, use the "neo4j+s" URI scheme
-host_name = "192.168.1.202"
-port = 7687
-url = "{scheme}://{host_name}:{port}".format(scheme=scheme, host_name=host_name, port=port)
-user = "neo4j"
-password = '12#9akk' 
-graph = Graph(url, user, password)
 
 # Default settings
 dev = "eth1"
 pktCount = 1
+neoPass = '*****'
+neoHost = '127.0.0.1'
 
 # Get options for execution
 argv = sys.argv[1:]
 
 try:
-	opts, args = getopt.getopt(argv, "i:c:")
+    opts, args = getopt.getopt(argv, "i:c:h:p:")
 
 except:
 	print("error")
 	exit()
 
 for opt, arg in opts:
-	if opt == '-i':
-		dev = arg
-	elif opt == '-c':
-		pktCount = int(arg)
+    if opt == '-i':
+        dev = arg
+    elif opt == '-c':
+        pktCount = int(arg)
+    elif opt == '-h':
+        neoHost = arg
+    elif opt == '-p':
+        neoPass = arg
+
+print(dev, pktCount, neoPass, neoHost)
+
+# Prepare login items for neo4j
+scheme = "neo4j"  # Connecting to Aura, use the "neo4j+s" URI scheme
+host_name = neoHost 
+port = 7687
+url = "{scheme}://{host_name}:{port}".format(scheme=scheme, host_name=host_name, port=port)
+user = "neo4j"
+password = neoPass 
+graph = Graph(url, user, password)
 
 # Init capture
 capture = pyshark.LiveCapture(interface=dev)
