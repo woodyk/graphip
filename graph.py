@@ -1,6 +1,6 @@
 #!/Users/flint/opt/anaconda3/bin/python3
 #
-# graph.py -- Wadih Khairallah <woody@smallroom.com>
+# graph.py -- <woody@smallroom.com>
 # https://neo4j.com/docs/api/python-driver/4.4/
 
 import logging
