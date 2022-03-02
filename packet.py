@@ -10,7 +10,6 @@ import socket
 import pyshark
 from graph import Graph
 
-
 # Default settings
 dev = "eth1"
 pktCount = 1
