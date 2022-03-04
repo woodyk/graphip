@@ -104,9 +104,7 @@ for p in capture.sniff_continuously(packet_count=pktCount):
         dstport = p.udp.dstport
         #print(p.udp.field_names)
 
-    if proto == "ARP":
-        pass
-    elif proto == "UNKNOWN":
+    if proto == "ARP" or proto == "UNKNOWN":
         pass
     else:
         graph.create_relation(ipsrc, ipdst)
@@ -116,7 +114,7 @@ for p in capture.sniff_continuously(packet_count=pktCount):
     elif proto == "UNKNOWN":
         continue
         #print(proto + "<----")
-        print(dir(p))
+        #print(dir(p))
         #print("********")
     else:
         print('{} {}:{} --> {}:{}'.format(proto, ipsrc, srcport, ipdst, dstport))
