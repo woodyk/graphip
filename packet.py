@@ -111,19 +111,14 @@ for p in capture.sniff_continuously(packet_count=pktCount):
     else:
         graph.create_relation(ipsrc, ipdst)
 
-    '''
-    if proto == "ARP":
-        pass
-        #print(proto + " " + ipsrc + " --> " + ipdst)
-    elif proto == "ICMP" or proto == "ICMPv6" or proto == "IGMP":
-        print(proto + " " + ipsrc + " --> " + ipdst)
+    if proto == "ARP" or proto == "ICMP" or proto == "ICMPv6" or proto == "IGMP":
+        print('{} {} --> {}'.format(proto, ipsrc, ipdst))
     elif proto == "UNKNOWN":
-        pass
+        continue
         #print(proto + "<----")
         print(dir(p))
         #print("********")
     else:
-        print(proto + " " + ipsrc + ":" + srcport + " --> " + ipdst + ":" + dstport)
-    '''
+        print('{} {}:{} --> {}:{}'.format(proto, ipsrc, srcport, ipdst, dstport))
 
 graph.close()
