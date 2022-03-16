@@ -43,7 +43,6 @@ for opt, arg in opts:
 scheme = "neo4j"  # Connecting to Aura, use the "neo4j+s" URI scheme
 port = 7687
 url = "{scheme}://{host_name}:{port}".format(scheme=scheme, host_name=neoHost, port=port)
-graph = Graph(url, neoUser, neoPass)
 
 # Define IP Directory
 ipDict = {}
@@ -119,6 +118,8 @@ for p in capture.sniff_continuously(packet_count=pktCount):
         #print("********")
     else:
         print('{} {}:{} --> {}:{}'.format(proto, ipsrc, srcport, ipdst, dstport))
+
+graph = Graph(url, neoUser, neoPass)
 
 for ipS, ipD in ipDict.items():
     graph.create_relation(ipS, ipD)
