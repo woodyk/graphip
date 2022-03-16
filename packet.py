@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 # packet.py -- <woody@smallroom.com>
-# packet.py -i <interface> -c <packet_count> -h <neo4j_host> -p <neo4j_password>
+# packet.py -i <interface> -c <packet_count> -h <neo4j_host> -p <neo4j_password> -u <neo4j_user>
 
 from struct import *
 import sys
@@ -24,7 +24,7 @@ try:
     opts, args = getopt.getopt(argv, "i:c:h:p:u:")
 
 except:
-	print("error")
+	print('packet.py -i <interface> -c <packet_count> -h <neo4j_host> -p <neo4j_password> -u <neo4j_user>')
 	exit()
 
 for opt, arg in opts:
