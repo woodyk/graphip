@@ -13,6 +13,7 @@ from graph import Graph
 # Default settings
 dev = "eth1"
 pktCount = 1
+neoUser = 'neo4j'
 neoPass = '*****'
 neoHost = '127.0.0.1'
 
@@ -20,7 +21,7 @@ neoHost = '127.0.0.1'
 argv = sys.argv[1:]
 
 try:
-    opts, args = getopt.getopt(argv, "i:c:h:p:")
+    opts, args = getopt.getopt(argv, "i:c:h:p:u:")
 
 except:
 	print("error")
@@ -35,17 +36,17 @@ for opt, arg in opts:
         neoHost = arg
     elif opt == '-p':
         neoPass = arg
-
-print(dev, pktCount, neoPass, neoHost)
+    elif opt == '-u':
+        neoUser = arg
 
 # Prepare login items for neo4j
 scheme = "neo4j"  # Connecting to Aura, use the "neo4j+s" URI scheme
-host_name = neoHost 
 port = 7687
-url = "{scheme}://{host_name}:{port}".format(scheme=scheme, host_name=host_name, port=port)
-user = "neo4j"
-password = neoPass 
-graph = Graph(url, user, password)
+url = "{scheme}://{host_name}:{port}".format(scheme=scheme, host_name=neoHost, port=port)
+graph = Graph(url, neoUser, neoPass)
+
+# Define IP Directory
+ipDict = {}
 
 # Init capture
 capture = pyshark.LiveCapture(interface=dev)
@@ -107,7 +108,7 @@ for p in capture.sniff_continuously(packet_count=pktCount):
     if proto == "ARP" or proto == "UNKNOWN":
         pass
     else:
-        graph.create_relation(ipsrc, ipdst)
+        ipDict[ipsrc] = ipdst
 
     if proto == "ARP" or proto == "ICMP" or proto == "ICMPv6" or proto == "IGMP":
         print('{} {} --> {}'.format(proto, ipsrc, ipdst))
@@ -118,5 +119,8 @@ for p in capture.sniff_continuously(packet_count=pktCount):
         #print("********")
     else:
         print('{} {}:{} --> {}:{}'.format(proto, ipsrc, srcport, ipdst, dstport))
+
+for ipS, ipD in ipDict.items():
+    graph.create_relation(ipS, ipD)
 
 graph.close()
