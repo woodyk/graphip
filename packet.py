@@ -43,7 +43,6 @@ for opt, arg in opts:
 scheme = "neo4j"  # Connecting to Aura, use the "neo4j+s" URI scheme
 port = 7687
 url = "{scheme}://{host_name}:{port}".format(scheme=scheme, host_name=neoHost, port=port)
-graph = Graph(url, neoUser, neoPass)
 
 # Define IP Directory
 ipDict = {}
@@ -53,9 +52,6 @@ capture = pyshark.LiveCapture(interface=dev)
 
 # Evaluate each packet
 for p in capture.sniff_continuously(packet_count=pktCount):
-    #print(p.eth)
-    #print(dir(p))
-    #print("******")
 
     proto = "UNKNOWN"
     srcport = ""
@@ -77,7 +73,6 @@ for p in capture.sniff_continuously(packet_count=pktCount):
     if 'ipv6' in p:
         ipsrc = p.ipv6.src
         ipdst = p.ipv6.dst
-        #print(dir(p))
         #print(p.ipv6.field_names)
 
     if 'icmpv6' in p:
@@ -108,18 +103,23 @@ for p in capture.sniff_continuously(packet_count=pktCount):
     if proto == "ARP" or proto == "UNKNOWN":
         pass
     else:
-        graph.create_relation(ipsrc, ipdst)
+        sd = ipsrc + "-" + ipdst
+        if sd in ipDict:
+            ipDict[sd] +=1
+        else:
+            ipDict[sd] = 1
 
     if proto == "ARP" or proto == "ICMP" or proto == "ICMPv6" or proto == "IGMP":
         print('{} {} --> {}'.format(proto, ipsrc, ipdst))
     elif proto == "UNKNOWN":
         continue
-        #print(proto + "<----")
-        #print(dir(p))
-        #print("********")
     else:
         print('{} {}:{} --> {}:{}'.format(proto, ipsrc, srcport, ipdst, dstport))
 
+graph = Graph(url, neoUser, neoPass)
 
+for key in ipDict.keys():
+    ipdat = key.split("-")
+    graph.create_relation(ipdat[0], ipdat[1])
 
 graph.close()
