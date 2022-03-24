@@ -118,8 +118,12 @@ for p in capture.sniff_continuously(packet_count=pktCount):
 
 graph = Graph(url, neoUser, neoPass)
 
+counter = 0
 for key in ipDict.keys():
     ipdat = key.split("-")
     graph.create_relation(ipdat[0], ipdat[1])
+    counter += 1
 
 graph.close()
+
+print(f"{counter} unique relations created")
