@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# graph.py -- <woody@smallroom.com>
+# graph.py
 # https://neo4j.com/docs/api/python-driver/4.4/
 
 import logging

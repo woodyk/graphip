@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 #
-# packet.py -- <woody@smallroom.com>
 # packet.py -i <interface> -c <packet_count> -h <neo4j_host> -p <neo4j_password> -u <neo4j_user>
 
 from struct import *
